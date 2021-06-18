@@ -1,21 +1,38 @@
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-  entry: path.resolve(__dirname, './src'), // src 내부의 index.js 를 바라본다
-  output: { // 빌드한 결과물을 어디에 생성할 것 인가
+  entry: path.resolve(__dirname, './src'),
+  output: {
     filename: 'bundle.[hash].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, './dist'),
+    publicPath:'/',
   },
   module: {
-    rules: [ // 어떤 파일들을 어떤 loader 를 이용하여 해석 할 것 인가
+    rules: [
       {
         test: /\.(js)$/,
-        exclude: /node_modules/,
         use: 'babel-loader',
+        exclude: /node_modules/,
       },
     ],
   },
   resolve: {
-    extensions: ['.js'], // .js 확장자 생략 가능
+    extensions: ['.js'],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+      filename: './index.html',
+    }),
+    
+  ],
+  devServer: {
+    contentBase: path.resolve(__dirname, 'dist'),
+    historyApiFallback: true,
+    hot: true,
+    open: true, //자동으로 브라우져 올려주기 
+    //포트도 지정가능 port: 3948290
+
+  }
 }
